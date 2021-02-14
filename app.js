@@ -8,7 +8,6 @@ const totalSelected = document.getElementById('total-selected');
 // selected image 
 let sliders = [];
 
-
 // If this key doesn't work
 // Find the name in the url and go to their website
 // to create your own api key
@@ -16,6 +15,8 @@ const KEY = '15674931-a9d714b6e9d654524df198e00&q';
 
 // show images 
 const showImages = (images) => {
+  totalSelected.innerText = '0';
+  document.getElementById('duration').value = '';
   imagesArea.style.display = 'block';
   gallery.innerHTML = '';
   // show gallery title
@@ -29,8 +30,7 @@ const showImages = (images) => {
                             <img class="favicon" src="https://img.icons8.com/offices/30/000000/filled-like.png"/> ${image.favorites} 
                             <img class="favicon" src="https://img.icons8.com/plasticine/100/000000/download.png"/>${image.downloads}
                          </p>
-                       </div>
-    `;
+                      </div> `;
     gallery.appendChild(div)
   })
 
@@ -39,23 +39,20 @@ const showImages = (images) => {
 const getImages = (query) => {
   fetch(`https://pixabay.com/api/?key=${KEY}=${query}&image_type=photo&pretty=true`)
     .then(response => response.json())
-    .then(data => {showImages(data.hits);})
+    .then(data => { showImages(data.hits); })
     .catch(err => console.log(err))
 }
 
 let slideIndex = 0;
-let noOfselected = 0;
 const selectItem = (event, img, id) => {
   let element = event.target;
   element.classList.toggle('added');
   let item = sliders.indexOf(img);
   if (item === -1) {
-    noOfselected++;
-    totalSelected.innerText = noOfselected;
+    totalSelected.innerText = parseInt(totalSelected.innerText) + 1;
     sliders[id] = img;
   } else {
-    noOfselected--;
-    totalSelected.innerText = noOfselected;
+    totalSelected.innerText = parseInt(totalSelected.innerText) - 1;
     sliders[id] = '';
   }
 }
@@ -90,16 +87,17 @@ const createSlider = () => {
 
   // console.log(document.getElementById('duration').value);
   const duration = document.getElementById('duration').value || 1000;
-  if (duration >= 0) {
-    sliders.forEach(slide => {
-      imagesArea.style.display = 'none';
-      let item = document.createElement('div')
-      item.className = "slider-item";
-      item.innerHTML = `<img class="w-100"
+
+  sliders.forEach(slide => {
+    imagesArea.style.display = 'none';
+    let item = document.createElement('div')
+    item.className = "slider-item";
+    item.innerHTML = `<img class="w-100"
     src="${slide}"
     alt="">`;
-      sliderContainer.appendChild(item)
-    })
+    sliderContainer.appendChild(item)
+  })
+  if (duration >= 0) {
     changeSlide(0)
     timer = setInterval(function () {
       slideIndex++;
@@ -107,7 +105,12 @@ const createSlider = () => {
     }, duration);
   }
   else {
-    alert("Slider duration must be in positive.Please reset.")
+    changeSlide(0)
+    timer = setInterval(function () {
+      slideIndex++;
+      changeSlide(slideIndex);
+    }, 1000);
+    // alert("Slider duration must be in positive.Please reset.")
   }
 }
 
