@@ -39,27 +39,16 @@ const showImages = (images) => {
 const getImages = (query) => {
   fetch(`https://pixabay.com/api/?key=${KEY}=${query}&image_type=photo&pretty=true`)
     .then(response => response.json())
-    .then(data => {
-      showImages(data.hits);
-      console.log(data);
-    }) // console.log(data)
+    .then(data => {showImages(data.hits);})
     .catch(err => console.log(err))
 }
 
 let slideIndex = 0;
 let noOfselected = 0;
-let memoryIndex = [false];
-// console.log(memoryIndex[10]);
 const selectItem = (event, img, id) => {
   let element = event.target;
-  // console.log(id);
   element.classList.toggle('added');
-  //console.log(img);
-
-
-
   let item = sliders.indexOf(img);
-  console.log(item);
   if (item === -1) {
     noOfselected++;
     totalSelected.innerText = noOfselected;
@@ -68,18 +57,18 @@ const selectItem = (event, img, id) => {
     noOfselected--;
     totalSelected.innerText = noOfselected;
     sliders[id] = '';
-    // sliders[].pop();
-    // alert('Hey, Already added !')
   }
 }
 var timer;
 let sliders2 = [];
 const createSlider = () => {
+  //checking unselected picture
   sliders.map(pic => {
     if (pic.length != '') {
       sliders2.push(pic);
     }
   })
+  //re assign after filtering unselected picture
   sliders = sliders2;
   // check slider image length
   if (sliders.length < 2) {
