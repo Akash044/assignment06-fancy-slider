@@ -15,6 +15,7 @@ const KEY = '15674931-a9d714b6e9d654524df198e00&q';
 
 // show images 
 const showImages = (images) => {
+  sliders = [];
   totalSelected.innerText = '0';
   document.getElementById('duration').value = '';
   imagesArea.style.display = 'block';
@@ -57,8 +58,8 @@ const selectItem = (event, img, id) => {
   }
 }
 var timer;
-let sliders2 = [];
 const createSlider = () => {
+  let sliders2 = [];
   //checking unselected picture
   sliders.map(pic => {
     if (pic.length != '') {
