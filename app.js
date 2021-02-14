@@ -4,6 +4,7 @@ const galleryHeader = document.querySelector('.gallery-header');
 const searchBtn = document.getElementById('search-btn');
 const sliderBtn = document.getElementById('create-slider');
 const sliderContainer = document.getElementById('sliders');
+const totalSelected = document.getElementById('total-selected');
 // selected image 
 let sliders = [];
 
@@ -22,7 +23,14 @@ const showImages = (images) => {
   images.forEach(image => {
     let div = document.createElement('div');
     div.className = 'col-lg-3 col-md-4 col-xs-6 img-item mb-2';
-    div.innerHTML = ` <img class="img-fluid img-thumbnail" onclick=selectItem(event,"${image.webformatURL}") src="${image.webformatURL}" alt="${image.tags}">`;
+    div.innerHTML = ` <img class="img-fluid img-thumbnail" onclick=selectItem(event,"${image.webformatURL}",${image.id}) src="${image.webformatURL}" alt="${image.tags}">
+                      <div class = "favicons-area">
+                         <p> <img class="favicon" src="https://img.icons8.com/dusk/50/000000/facebook-like.png"/>${image.likes} 
+                            <img class="favicon" src="https://img.icons8.com/offices/30/000000/filled-like.png"/> ${image.favorites} 
+                            <img class="favicon" src="https://img.icons8.com/plasticine/100/000000/download.png"/>${image.downloads}
+                         </p>
+                       </div>
+    `;
     gallery.appendChild(div)
   })
 
@@ -39,19 +47,40 @@ const getImages = (query) => {
 }
 
 let slideIndex = 0;
-const selectItem = (event, img) => {
+let noOfselected = 0;
+let memoryIndex = [false];
+// console.log(memoryIndex[10]);
+const selectItem = (event, img, id) => {
   let element = event.target;
-  element.classList.add('added');
+  // console.log(id);
+  element.classList.toggle('added');
+  //console.log(img);
+
+
 
   let item = sliders.indexOf(img);
+  console.log(item);
   if (item === -1) {
-    sliders.push(img);
+    noOfselected++;
+    totalSelected.innerText = noOfselected;
+    sliders[id] = img;
   } else {
-    alert('Hey, Already added !')
+    noOfselected--;
+    totalSelected.innerText = noOfselected;
+    sliders[id] = '';
+    // sliders[].pop();
+    // alert('Hey, Already added !')
   }
 }
-var timer
+var timer;
+let sliders2 = [];
 const createSlider = () => {
+  sliders.map(pic => {
+    if (pic.length != '') {
+      sliders2.push(pic);
+    }
+  })
+  sliders = sliders2;
   // check slider image length
   if (sliders.length < 2) {
     alert('Select at least 2 image.')
